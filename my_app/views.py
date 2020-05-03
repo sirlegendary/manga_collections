@@ -45,13 +45,26 @@ def home(request):
             if soup.find("table", {"id": "listing"}):
                 table = soup.find("table", {"id": "listing"})
                 rows = table.findAll('tr')
+                chapters = []
                 for tr in rows:
                     aTag = tr.find('a')
-                    urlChapter = str(aTag)
+                    urlChapter = str(aTag)[9:-4].split('"')[0] #url to chapter
                     print(urlChapter)
+
+                    # td = str(tr)[-21:-11].strip('Date Added')
+                    # print(td)
+                    trToString = str(tr)
+                    releaseDate = re.search(r'(\d+/\d+/\d+)', trToString)
+                    
+                    print(releaseDate.group())
+
+                    if urlChapter != 'Null' and urlChapter != '':
+                        chapters.append(urlChapter)
+             
                 # urlChapter = str(table).split('td')
                 # chapterTitle = "chh"
                 # chapterRelease = "hh"
+
 
                 # print(f"Chpater details: {urlChapter}")
             else:
@@ -65,12 +78,13 @@ def home(request):
             mangaData = {
                 'title':title,
                 'coverImg': coverImg,
+                'chapters': chapters,
                 'name': 'HELLO',
             }
 
             collection.append(mangaData)
 
-    print(collection)
+    # print(collection)
 
         # else:
         #     error = "No Data returned from HTML request to managareader." 
