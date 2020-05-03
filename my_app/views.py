@@ -56,7 +56,7 @@ def home(request):
                     trToString = str(tr)
                     releaseDate = re.search(r'(\d+/\d+/\d+)', trToString)
                     
-                    print(releaseDate.group())
+                    print(releaseDate)
 
                     if urlChapter != 'Null' and urlChapter != '':
                         chapters.append(urlChapter)
