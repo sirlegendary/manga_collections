@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import MangaCollection
 from bs4 import BeautifulSoup
+import urllib
 from urllib.request import urlopen
 from urllib.error import HTTPError
 from urllib.error import URLError
@@ -15,10 +16,11 @@ def home(request):
 
         try:
             # Get the Html page for the url
-            html = urlopen(url.url)
+            req = urllib.request.Request(url.url, headers = {"User-Agent": "Chrome"})
+            html = urlopen(req)
         except HTTPError as e:
             error = e
-            print(e)
+            print(f"\n HTTPError: {e}\n")
         except URLError:
             error = "Server down or incorrect domain"
             print("Server down or incorrect domain")
@@ -26,71 +28,47 @@ def home(request):
             soup = BeautifulSoup(html, features='html.parser')
             
             # Get cover image
-            if soup.img:
-                coverImgRaw = soup.img
-                print(f"Raw Cover Image: {coverImgRaw}")
-                coverImg = str(coverImgRaw).split('=')[2].strip('"/>')
-                print(f"Cover Image: {coverImg}")
-            else: # if not found, add placeholder
-                coverImg = "https://via.placeholder.com/150"
+            coverImgRaw = soup.find("meta",  property="og:image")
+            coverImg = coverImgRaw["content"] if coverImgRaw else "https://via.placeholder.com/150"
             
-            # Get manga name
-            if soup.find("h2", {"class": "aname"}):
-                title = soup.find("h2", {"class": "aname"}).text
-                print(f"Title: {title}")
-            else:
-                title = "No Title Found."
-            
-            # Get Chapter Name, Link to chapter and published date
-            if soup.find("table", {"id": "listing"}):
-                table = soup.find("table", {"id": "listing"})
-                rows = table.findAll('tr')
-                chapters = []
-                for tr in rows:
-                    aTag = tr.find('a')
-                    urlChapter = str(aTag)[9:-4].split('"')[0] #url to chapter
-                    print(urlChapter)
+            # Get manga title
+            titleRaw = soup.find("meta",  property="og:title")
+            title = titleRaw["content"] if titleRaw else "Manga Title not found."
 
-                    # td = str(tr)[-21:-11].strip('Date Added')
-                    # print(td)
-                    trToString = str(tr)
-                    releaseDate = re.search(r'(\d+/\d+/\d+)', trToString)
+            # Get manga url
+            mangaUrlRaw = soup.find("meta",  property="og:url")
+            mangaUrl = mangaUrlRaw["content"] if mangaUrlRaw else "https://www.taadd.com/"
+
+            # get most recent chapters max.4
+            chapters = []
+            for a_tag in soup.find_all(href=True):
+                if a_tag['href'].startswith("/chapter/") and "-" in a_tag['href']:
+                    chapterFilter = a_tag['href'].split("/")
+                    chapter = chapterFilter[2].replace('-',' ')
+                    chapterUrl = a_tag['href']
+                    release_date = a_tag.text
                     
-                    print(releaseDate)
+                    chapterDetails = {
+                        'chapter':chapter,
+                        'chapterUrl':chapterUrl,
+                        'release_date':release_date,
+                    }
+                    # sort and only append recent 4
+                    chapters.append(chapterDetails)
 
-                    if urlChapter != 'Null' and urlChapter != '':
-                        chapters.append(urlChapter)
-             
-                # urlChapter = str(table).split('td')
-                # chapterTitle = "chh"
-                # chapterRelease = "hh"
-
-
-                # print(f"Chpater details: {urlChapter}")
-            else:
-                print("Nothing found")
-
-                # <td>
-                # <div class="chico_manga"></div>
-                # <a href="/tate-no-yuusha-no-nariagari/61">Tate no Yuusha no Nariagari 61</a> : </td>
-                # <td>
+                    # print sorted(lis, key = lambda i: i['release_date'],reverse=True)
+                    
+            print(chapters if len(chapters) > 0 else "No chapters found")
 
             mangaData = {
                 'title':title,
                 'coverImg': coverImg,
-                'chapters': chapters,
-                'name': 'HELLO',
+                'mangaUrl': mangaUrl,
+                'chapters': chapters if len(chapters) > 0 else None,
             }
 
             collection.append(mangaData)
 
-    # print(collection)
-
-        # else:
-        #     error = "No Data returned from HTML request to managareader." 
-        #     print (f"Error! No Data returned from HTML request for {url.name}")
-
- 
     stuff_for_frontend = {
             'error': error,
             'collection': collection,
