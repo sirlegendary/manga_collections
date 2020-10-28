@@ -56,10 +56,6 @@ def home(request):
                     # sort and only append recent 4
                     chapters.append(chapterDetails)
 
-                    # print sorted(lis, key = lambda i: i['release_date'],reverse=True)
-                    
-            print(chapters if len(chapters) > 0 else "No chapters found")
-
             mangaData = {
                 'title':title,
                 'coverImg': coverImg,
