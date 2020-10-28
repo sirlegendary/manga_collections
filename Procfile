@@ -1,1 +1,1 @@
-web: gunicorn mangas.wsgi
+web: gunicorn mangas.wsgi --log-file -
