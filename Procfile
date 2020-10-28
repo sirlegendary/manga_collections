@@ -1,1 +1,1 @@
-web: gunicorn account_switching.wsgi --log-file -
+web: gunicorn mangas.wsgi
