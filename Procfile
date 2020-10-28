@@ -1,1 +1,1 @@
-web: gunicorn project_name.wsgi
+web: gunicorn account_switching.wsgi --log-file -
