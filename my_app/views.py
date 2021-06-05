@@ -11,6 +11,7 @@ import re
 def home(request):
     error = None
     collection = []
+    
     #Get all the manga urls from the database
     for url in MangaCollection.objects.all():
 
@@ -23,7 +24,7 @@ def home(request):
             print(f"\n HTTPError: {e}\n")
         except URLError:
             error = "Server down or incorrect domain"
-            print("Server down or incorrect domain")
+            print(f"\n Server down or incorrect domain \n")
         else:
             soup = BeautifulSoup(html, features='html.parser')
             
@@ -39,7 +40,7 @@ def home(request):
             mangaUrlRaw = soup.find("meta",  property="og:url")
             mangaUrl = mangaUrlRaw["content"] if mangaUrlRaw else "https://www.taadd.com/"
 
-            # get most recent chapters max.4
+            # get all chapters
             chapters = []
             for a_tag in soup.find_all(href=True):
                 if a_tag['href'].startswith("/chapter/") and "-" in a_tag['href']:
@@ -53,9 +54,11 @@ def home(request):
                         'chapterUrl':chapterUrl,
                         'release_date':release_date,
                     }
-                    # sort and only append recent 4
+                    
                     chapters.append(chapterDetails)
-
+            
+            # sortedChapters = sorted(chapters, key = lambda i: i['chapter'],reverse=True)
+            
             mangaData = {
                 'title':title,
                 'coverImg': coverImg,
@@ -64,6 +67,8 @@ def home(request):
             }
 
             collection.append(mangaData)
+
+    # sortedManga = sorted(collection, key = lambda i: i['chapters'],reverse=True)
 
     stuff_for_frontend = {
             'error': error,
