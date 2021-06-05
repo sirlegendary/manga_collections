@@ -1,7 +1,7 @@
 # Manga Collections
 
 ## Why?
-This allows enables you to have a place to store all your favourite mangas in one place and also see when the latest chapters were released.
+This allows you to have a place to store all your favourite mangas in one place and also see when the latest chapters were released.
 This way you can only focus on the mangas you really want.
 
 ## Language & Framework 
