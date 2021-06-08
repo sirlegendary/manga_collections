@@ -11,7 +11,7 @@ This way you can only focus on the mangas you really want.
 ## Manga Source
 - [TAADD](https://www.taadd.com/)
 
-## Instructions 
+## Instructions
 - Migrate DB
 
    `docker-compose run web python manage.py makemigrations`
@@ -20,7 +20,7 @@ This way you can only focus on the mangas you really want.
 
 - Create Super user
 
-   `docker-compose run web python manage.py createsuperuser`
+   `docker-compose run web python manage.py createsuperuser` and follow the Instructions 
 
 - Start
 
