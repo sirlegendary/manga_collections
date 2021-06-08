@@ -13,13 +13,17 @@ This way you can only focus on the mangas you really want.
 
 ## Instructions 
 - Migrate DB
+
    `docker-compose run web python manage.py makemigrations`
+
    `docker-compose run web python manage.py migrate`
 
 - Create Super user
+
    `docker-compose run web python manage.py createsuperuser`
 
 - Start
+
    `docker-compose up`
 
 - Add Manga to shelf
@@ -32,4 +36,5 @@ This way you can only focus on the mangas you really want.
   7. Repeat step 1-5 to add more mangas
 
 - If you wish to stop your server
+
    `docker-compose down`
