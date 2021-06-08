@@ -26,7 +26,7 @@ This way you can only focus on the mangas you really want.
     1. Visit: `0.0.0.0:8000/admin` and login with the user you created above
     2. Click on the `+Add` inside the `Manga collections`
     3. Enter the title of your desired Manga in the `Name` field
-    4. Paste the exact URL of your dessired Managa from [TAADD](https://www.taadd.com/) inside the `URL` field i.e. [ONE PIECE](http://www.mangareader.net/one-piece)
+    4. Paste the exact URL of your dessired Managa from [TAADD](https://www.taadd.com/) inside the `URL` field i.e. `http://www.mangareader.net/one-piece`
     5. Click `SAVE`
     6. Now Visit: `0.0.0.0:8000` and your manga and its latest releases should be in the shelf
     7. Repeat step 1-5 to add more mangas
